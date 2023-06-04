@@ -9,7 +9,7 @@ exports.up = function (knex) {
       users.increments("user_id");
       users.string("username").notNullable().unique();
       users.string("password").notNullable();
-      users.string("emal").notNullable().unique();
+      users.string("email").notNullable().unique();
       users
         .string("avatar_url")
         .defaultTo(
