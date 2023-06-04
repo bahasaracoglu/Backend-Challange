@@ -1,5 +1,8 @@
 const usersModel = require("../users/users-model");
 const validator = require("validator");
+const bcryptjs = require("bcryptjs");
+const { JWT_SECRET } = require("../secret");
+const jwt = require("jsonwebtoken");
 
 function checkPayload(req, res, next) {
   const { username, password, email } = req.body;
@@ -27,13 +30,27 @@ function checkPayload(req, res, next) {
   }
 }
 
-async function isUserExist(req, res, next) {
+function checkPayloadLogin(req, res, next) {
+  try {
+    const { usernameOrEmail, password } = req.body;
+    if (!usernameOrEmail || usernameOrEmail.length < 0 || !password) {
+      res.status(400).json({ message: "Username or email are required." });
+    } else {
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+//is UserExist register'da db'de bu isimde bir kullanıcı olup olmadığını sorgular.//
+async function isUserAlreadyExist(req, res, next) {
   const { username, email } = req.body;
 
   // Kullanıcı adı ve e-posta adresi kontrolü
 
   try {
-    const existingUser = await usersModel.getBy(
+    const existingUser = await usersModel.getByUsernameOrEmail(
       { username: username },
       { email: email }
     );
@@ -60,4 +77,69 @@ async function isUserExist(req, res, next) {
   }
 }
 
-module.exports = { checkPayload, isUserExist };
+async function hashedPassword(req, res, next) {
+  try {
+    const hashedpassword = bcryptjs.hashSync(req.body.password, 8);
+    req.body.password = hashedpassword;
+    next();
+  } catch (error) {
+    next();
+  }
+}
+
+async function isUserExist(req, res, next) {
+  try {
+    const { usernameOrEmail } = req.body;
+    let existingUser;
+    if (validator.isEmail(usernameOrEmail)) {
+      // Eğer giriş verisi e-posta adresi ise
+      existingUser = await usersModel.getBy({ email: usernameOrEmail });
+    } else {
+      // Eğer giriş verisi kullanıcı adı ise
+      existingUser = await usersModel.getBy({
+        username: usernameOrEmail,
+      });
+    }
+
+    if (existingUser) {
+      req.currentUser = existingUser;
+      next();
+    } else {
+      res.status(401).json({ message: "Invalid user or password" });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function passwordCheck(req, res, next) {
+  const password = req.body.password;
+  const dbPassword = req.currentUser.password;
+  const isPasswordMatch = bcryptjs.compareSync(password, dbPassword);
+
+  try {
+    if (!isPasswordMatch) {
+      res.status(401).json({ message: "Invalid user or password" });
+    } else {
+      let payload = {
+        user_id: req.currentUser.user_id,
+        username: req.currentUser.username,
+        avatar_url: req.currentUser.avatar_url,
+      };
+      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
+      req.token = token;
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  checkPayload,
+  checkPayloadLogin,
+  isUserAlreadyExist,
+  hashedPassword,
+  isUserExist,
+  passwordCheck,
+};

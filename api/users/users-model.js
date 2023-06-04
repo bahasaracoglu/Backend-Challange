@@ -5,8 +5,13 @@ async function getById(id) {
   return user;
 }
 
-async function getBy(username, email) {
+async function getByUsernameOrEmail(username, email) {
   const user = await db("users").where(username).orWhere(email).first();
+  return user;
+}
+
+async function getBy(filter) {
+  const user = await db("users").where(filter).first();
   return user;
 }
 
@@ -16,6 +21,7 @@ async function create(user) {
 }
 
 module.exports = {
+  getByUsernameOrEmail,
   getById,
   getBy,
   create,
