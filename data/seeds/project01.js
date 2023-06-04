@@ -15,7 +15,59 @@ exports.seed = async function (knex) {
       avatar_url:
         "https://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_400x400.jpg",
     },
-    { id: 2, colName: "rowValue2" },
-    { id: 3, colName: "rowValue3" },
+    {
+      username: "barackobama",
+      password: "$2a$10$dFwWjD8hi8K2I9/Y65MWi.WU0qn9eAVaiBoRSShTvuJVGw8XpsCiq", // password "1234"
+      email: "barackobama@notmail.com",
+      avatar_url:
+        "https://pbs.twimg.com/profile_images/1329647526807543809/2SGvnHYV_400x400.jpg",
+    },
+    {
+      username: "justinbieber",
+      password: "$2a$10$dFwWjD8hi8K2I9/Y65MWi.WU0qn9eAVaiBoRSShTvuJVGw8XpsCiq", // password "1234"
+      email: "justinbieber@notmail.com",
+      avatar_url:
+        "https://pbs.twimg.com/profile_images/1473447174591684612/vlsbWYtq_400x400.jpg",
+    },
+  ]);
+  await knex("posts").insert([
+    {
+      body: "Just had the most amazing sunset hike! Nature's beauty never fails to inspire me. 🌅 #naturelovers #hikingadventures",
+      user_id: 1,
+    },
+    {
+      body: "Can't believe it's already June! Time flies when you're having fun. 😄 Looking forward to making the most of this summer. ☀️ #summerfun #goodtimes",
+      user_id: 1,
+    },
+    {
+      body: "Trying out a new recipe today, and it turned out delicious! 😋 Cooking is such a therapeutic activity for me. #foodie #homemade",
+      user_id: 2,
+    },
+    {
+      body: "Feeling grateful for all the incredible people in my life. Surrounding yourself with positive vibes is the key to happiness. 🙌 #gratitude #positivity",
+      user_id: 2,
+    },
+    {
+      body: "Just finished reading an amazing book that kept me hooked till the last page. 📚 Highly recommend it to all the fellow bookworms out there! #booklover #readinglist",
+      user_id: 3,
+    },
+    {
+      body: "Spent the afternoon exploring a hidden gem in the city. Sometimes the best discoveries are right in your own backyard. #adventureawaits #cityexploration",
+      user_id: 3,
+    },
+    {
+      body: "Taking a break from screens and enjoying a digital detox. It's refreshing to disconnect and focus on the present moment. #unplug #mindfulness",
+      user_id: 3,
+    },
+  ]);
+
+  await knex("favorites").insert([
+    { user_id: 1, post_id: 3 },
+    { user_id: 1, post_id: 4 },
+    { user_id: 1, post_id: 5 },
+    { user_id: 2, post_id: 1 },
+    { user_id: 2, post_id: 6 },
+    { user_id: 3, post_id: 1 },
+    { user_id: 3, post_id: 2 },
   ]);
 };
