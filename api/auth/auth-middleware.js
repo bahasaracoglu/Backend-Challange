@@ -30,6 +30,7 @@ function checkPayload(req, res, next) {
   }
 }
 
+//login için usernameOrEmail kontrol eder
 function checkPayloadLogin(req, res, next) {
   try {
     const { usernameOrEmail, password } = req.body;
@@ -43,7 +44,7 @@ function checkPayloadLogin(req, res, next) {
   }
 }
 
-//is UserExist register'da db'de bu isimde bir kullanıcı olup olmadığını sorgular.//
+//isUserAlreadyExist kayıt olurken db'de bu isimde bir kullanıcı olup olmadığını sorgular.//
 async function isUserAlreadyExist(req, res, next) {
   const { username, email } = req.body;
 
@@ -87,6 +88,7 @@ async function hashedPassword(req, res, next) {
   }
 }
 
+//isUserExist login olurken kullanıcının db'de olup olmadığını kontrol eder
 async function isUserExist(req, res, next) {
   try {
     const { usernameOrEmail } = req.body;
@@ -112,6 +114,7 @@ async function isUserExist(req, res, next) {
   }
 }
 
+//loginde password kontrolü ve akabinde token yaratılması
 async function passwordCheck(req, res, next) {
   const password = req.body.password;
   const dbPassword = req.currentUser.password;
