@@ -32,17 +32,22 @@ router.post("/", mw.checkPayload, async (req, res, next) => {
 
 //updates post
 
-router.put("/", mw.checkPayload, async (req, res, next) => {
+router.put("/:id", mw.checkPayload, async (req, res, next) => {
   try {
+    const id = req.params.id;
     const { body, image_url, user_id } = req.body;
-    const newPost = { user_id: user_id, body: body, image_url: image_url };
-    const updatedPost = await postsModel.update(newPost).first();
+    const newPost = {
+      user_id: user_id,
+      body: body,
+      image_url: image_url,
+    };
+    const updatedPost = await postsModel.update(id, newPost);
     if (!updatedPost) {
       next(error);
     } else {
       res
         .status(200)
-        .json({ message: "Edited post successfully submitted.", insertedPost });
+        .json({ message: "Edited post successfully submitted.", updatedPost });
     }
   } catch (error) {
     next(error);

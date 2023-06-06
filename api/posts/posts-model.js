@@ -20,9 +20,11 @@ async function remove(id) {
 }
 
 async function update(id, post) {
-  return db("posts")
-    .where("id", id)
+  await db("posts")
+    .where("post_id", id)
     .update({ body: post.body, image_url: post.image_url });
+
+  return getById(id);
 }
 
 module.exports = {
