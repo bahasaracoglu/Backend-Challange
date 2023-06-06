@@ -43,7 +43,7 @@ router.post(
   passwordCheck,
   (req, res, next) => {
     try {
-      res.status(401).json({
+      res.status(201).json({
         message: "User successfully logged in.",
         token: req.token,
       });

@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const server = express();
+const morgan = require("morgan");
 
 const postsRouter = require("../api/posts/posts-router");
 const authRouter = require("../api/auth/auth-router");
@@ -9,6 +10,7 @@ const authRouter = require("../api/auth/auth-router");
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+server.use(morgan("dev"));
 
 server.use("/api/posts", postsRouter);
 server.use("/api/auth", authRouter);

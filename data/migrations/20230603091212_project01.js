@@ -34,6 +34,7 @@ exports.up = function (knex) {
 
     .createTable("favorites", (favorites) => {
       favorites.increments("favorite_id");
+      favorites.timestamp("created_at").defaultTo(knex.fn.now());
       favorites
         .integer("user_id")
         .unsigned()

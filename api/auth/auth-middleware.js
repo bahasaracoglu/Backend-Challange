@@ -7,8 +7,8 @@ const jwt = require("jsonwebtoken");
 function checkPayload(req, res, next) {
   const { username, password, email } = req.body;
 
-  let usernameCheck = username || username.length > 3;
-  let passwordCheck = password || password.length > 6;
+  let usernameCheck = username || username.length > 2;
+  let passwordCheck = password || password.length > 5;
   let emailCheck = validator.isEmail(email);
 
   try {
@@ -84,7 +84,7 @@ async function hashedPassword(req, res, next) {
     req.body.password = hashedpassword;
     next();
   } catch (error) {
-    next();
+    next(error);
   }
 }
 
