@@ -15,8 +15,7 @@ async function create(post) {
 }
 
 async function remove(id) {
-  await db("posts").where("id", id).del();
-  return getById(id);
+  return db("posts").where("post_id", id).del();
 }
 
 async function update(id, post) {

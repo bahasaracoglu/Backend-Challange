@@ -56,16 +56,14 @@ router.put("/:id", mw.checkPayload, async (req, res, next) => {
 
 //deletes post
 
-router.delete("/id", mw.checkPayload, async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
-    const id = req.params;
-    const deletedPost = await postsModel.delete(id);
+    const id = req.params.id;
+    const deletedPost = await postsModel.remove(id);
     if (!deletedPost) {
-      next(error);
+      res.status(400).json({ message: `Post with id: ${id} is not found.` });
     } else {
-      res
-        .status(200)
-        .json({ message: "Post removed successfully.", insertedPost });
+      res.status(200).json({ message: "Post removed successfully." });
     }
   } catch (error) {
     next(error);
