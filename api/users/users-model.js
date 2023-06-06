@@ -1,5 +1,14 @@
 const db = require("../../data/db-config");
 
+async function getAll() {
+  return db("users as u").select(
+    "u.user_id",
+    "u.username",
+    "u.email",
+    "u.avatar_url"
+  );
+}
+
 async function getById(id) {
   const user = await db("users").where("user_id", id).first();
   return user;
@@ -21,6 +30,7 @@ async function create(user) {
 }
 
 module.exports = {
+  getAll,
   getByUsernameOrEmail,
   getById,
   getBy,
