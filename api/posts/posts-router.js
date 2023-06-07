@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const postsModel = require("./posts-model");
 const mw = require("./posts-middleware");
-
+const favsMw = require("../favorites/favorites-middleware");
 // brings all posts for feed
 router.get("/", async (req, res, next) => {
   try {
@@ -69,5 +69,17 @@ router.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+router.get(
+  "/:id/favorites",
+  favsMw.checkFavsByPostId,
+  async (req, res, next) => {
+    try {
+      res.status(200).json(req.favUsers);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

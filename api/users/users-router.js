@@ -46,14 +46,17 @@ router.delete("/:id", async (req, res, next) => {
 });
 
 // brings users favorited posts
-router.get("/:id/favorites", favsMw.checkFavsById, async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    res.status(200).json(req.favPosts);
-  } catch (error) {
-    next(error);
+router.get(
+  "/:id/favorites",
+  favsMw.checkFavsByUserId,
+  async (req, res, next) => {
+    try {
+      res.status(200).json(req.favPosts);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 /*
 // brings all users

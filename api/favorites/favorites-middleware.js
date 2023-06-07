@@ -1,6 +1,6 @@
 const favsModel = require("../favorites/favorites-model");
 
-const checkFavsById = async (req, res, next) => {
+const checkFavsByUserId = async (req, res, next) => {
   try {
     const id = req.params.id;
     const favPosts = await favsModel.getById(id);
@@ -17,4 +17,21 @@ const checkFavsById = async (req, res, next) => {
   }
 };
 
-module.exports = { checkFavsById };
+const checkFavsByPostId = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const favUsers = await favsModel.getByPostId(id);
+    if (!favUsers || favUsers.length <= 0) {
+      res
+        .status(400)
+        .json({ message: `No user found who liked post id: ${id}.` });
+    } else {
+      req.favUsers = favUsers;
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { checkFavsByUserId, checkFavsByPostId };
