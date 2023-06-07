@@ -15,7 +15,7 @@ async function getByPostId(id) {
   const favoritedByUsers = await db("favorites as f")
     .join("users as u", "f.user_id", "=", "u.user_id")
     .where("f.post_id", id)
-    .select("u.username", { favorited_at: "f.created_at" });
+    .select("u.username", "u.user_id", { favorited_at: "f.created_at" });
 
   return favoritedByUsers;
 }
@@ -24,4 +24,10 @@ function create(user_id, post_id) {
   return db("favorites as f").insert({ user_id: user_id, post_id: post_id });
 }
 
-module.exports = { getById, getByPostId, create };
+function remove(user_id, post_id) {
+  return db("favorites as f")
+    .where({ user_id: user_id, post_id: post_id })
+    .del();
+}
+
+module.exports = { getById, getByPostId, create, remove };

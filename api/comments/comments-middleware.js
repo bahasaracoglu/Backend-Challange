@@ -24,7 +24,7 @@ const checkCommentsByPostId = async (req, res, next) => {
     if (!comments || comments.length <= 0) {
       res
         .status(400)
-        .json({ message: `No comments foundfot this post id: ${id}.` });
+        .json({ message: `No comments found for this post id: ${id}.` });
     } else {
       req.comments = comments;
       next();
