@@ -28,8 +28,20 @@ exports.up = function (knex) {
         .notNullable()
         .references("user_id")
         .inTable("users")
-        .onUpdate("RESTRICT")
-        .onDelete("RESTRICT");
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+    })
+
+    .createTable("roles", (roles) => {
+      roles.increments("role_id");
+      roles.string("rolename").notNullable().defaultTo("user");
+      roles
+        .integer("user_id")
+        .notNullable()
+        .references("user_id") //ilişki kurulacak kolon adı
+        .inTable("users") //ilişki kurulacak tablo adı.
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT"); //RESTRICT yasaklar silinmesini
     })
 
     .createTable("favorites", (favorites) => {
@@ -41,16 +53,38 @@ exports.up = function (knex) {
         .notNullable()
         .references("user_id")
         .inTable("users")
-        .onUpdate("RESTRICT")
-        .onDelete("RESTRICT");
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       favorites
         .integer("post_id")
         .unsigned()
         .notNullable()
         .references("post_id")
         .inTable("posts")
-        .onUpdate("RESTRICT")
-        .onDelete("RESTRICT");
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+    })
+
+    .createTable("comments", (comments) => {
+      comments.increments("comment_id");
+
+      comments.timestamp("create_at").defaultTo(knex.fn.now());
+      comments.string("body").notNullable();
+      comments.string("image_url");
+      comments
+        .integer("post_id")
+        .notNullable()
+        .references("post_id")
+        .inTable("posts")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
+      comments
+        .integer("user_id")
+        .notNullable()
+        .references("user_id") //ilişki kurulacak kolon adı
+        .inTable("users") //ilişki kurulacak tablo adı.
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE"); //RESTRICT yasaklar silinmesini
     });
 };
 
@@ -59,7 +93,8 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  knex.schema
+  return knex.schema
+    .dropTableIfExists("comments")
     .dropTableIfExists("favorites")
     .dropTableIfExists("posts")
     .dropTableIfExists("users");
