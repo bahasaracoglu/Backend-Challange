@@ -1,4 +1,6 @@
 const usersModel = require("./users-model");
+//const favsModel = require("../favorites/favorites-model");
+const favsMw = require("../favorites/favorites-middleware");
 const router = require("express").Router();
 
 // brings all users
@@ -42,13 +44,16 @@ router.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
-/*
-// brings all users
-router.get("/", async (req, res, next) => {
-  try {
 
-  } catch (error) {}
-});*/
+// brings users favorited posts
+router.get("/:id/favorites", favsMw.checkFavsById, async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    res.status(200).json(req.favPosts);
+  } catch (error) {
+    next(error);
+  }
+});
 
 /*
 // brings all users
