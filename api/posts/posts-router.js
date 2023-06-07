@@ -2,6 +2,8 @@ const router = require("express").Router();
 const postsModel = require("./posts-model");
 const mw = require("./posts-middleware");
 const favsMw = require("../favorites/favorites-middleware");
+const commentsMw = require("../comments/comments-middleware");
+
 // brings all posts for feed
 router.get("/", async (req, res, next) => {
   try {
@@ -76,6 +78,18 @@ router.get(
   async (req, res, next) => {
     try {
       res.status(200).json(req.favUsers);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/:id/comments",
+  commentsMw.checkCommentsByPostId,
+  async (req, res, next) => {
+    try {
+      res.status(200).json(req.comments);
     } catch (error) {
       next(error);
     }

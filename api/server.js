@@ -8,6 +8,7 @@ const postsRouter = require("../api/posts/posts-router");
 const authRouter = require("../api/auth/auth-router");
 const usersRouter = require("../api/users/users-router");
 const favRouter = require("../api/favorites/favorites-router");
+const commentsRouter = require("../api/comments/comments-router");
 
 server.use(helmet());
 server.use(express.json());
@@ -18,6 +19,7 @@ server.use("/api/users", usersRouter);
 server.use("/api/posts", postsRouter);
 server.use("/api/auth", authRouter);
 server.use("/api/favorites", favRouter);
+server.use("/api/comments", commentsRouter);
 
 server.use((err, req, res, next) => {
   // eslint-disable-line

@@ -1,6 +1,7 @@
 const usersModel = require("./users-model");
 //const favsModel = require("../favorites/favorites-model");
 const favsMw = require("../favorites/favorites-middleware");
+const commentsMw = require("../comments/comments-middleware");
 const router = require("express").Router();
 
 // brings all users
@@ -58,12 +59,16 @@ router.get(
   }
 );
 
-/*
-// brings all users
-router.get("/", async (req, res, next) => {
-  try {
-
-  } catch (error) {}
-});*/
+router.get(
+  "/:id/comments",
+  commentsMw.checkCommentsByUserId,
+  async (req, res, next) => {
+    try {
+      res.status(200).json(req.comments);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

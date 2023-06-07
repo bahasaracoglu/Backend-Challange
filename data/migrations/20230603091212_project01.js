@@ -68,7 +68,7 @@ exports.up = function (knex) {
     .createTable("comments", (comments) => {
       comments.increments("comment_id");
       comments.timestamp("created_at").defaultTo(knex.fn.now());
-      comments.string("body").notNullable();
+      comments.string("body", 280).notNullable();
       comments.string("image_url");
       comments
         .integer("post_id")
