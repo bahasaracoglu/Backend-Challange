@@ -6,7 +6,10 @@ exports.seed = async function (knex) {
   // Deletes ALL existing entries
   await knex("users").truncate();
   await knex("posts").truncate();
+  await knex("roles").truncate();
   await knex("favorites").truncate();
+  await knex("comments").truncate();
+
   await knex("users").insert([
     {
       username: "elonmusk",
@@ -61,6 +64,12 @@ exports.seed = async function (knex) {
     },
   ]);
 
+  await knex("roles").insert([
+    { user_id: 1, rolename: "Admin" },
+    { user_id: 2, rolename: "User" },
+    { user_id: 3, rolename: "User" },
+  ]);
+
   await knex("favorites").insert([
     { user_id: 1, post_id: 3 },
     { user_id: 1, post_id: 4 },
@@ -69,5 +78,33 @@ exports.seed = async function (knex) {
     { user_id: 2, post_id: 6 },
     { user_id: 3, post_id: 1 },
     { user_id: 3, post_id: 2 },
+  ]);
+  await knex("comments").insert([
+    { content: "This is a great article!", user_id: 1, post_id: 7 },
+    { content: "Thank you, it was very helpful.", user_id: 1, post_id: 6 },
+    {
+      content: "Seems like there is missing information.",
+      user_id: 1,
+      post_id: 5,
+    },
+    { content: "Exactly what I was looking for!", user_id: 2, post_id: 7 },
+    {
+      content: "I have a question regarding this topic.",
+      user_id: 2,
+      post_id: 6,
+    },
+    {
+      content: "I disagree with some points mentioned here.",
+      user_id: 2,
+      post_id: 5,
+    },
+    { content: "Well written and easy to understand.", user_id: 3, post_id: 1 },
+    { content: "I would love to see more examples.", user_id: 3, post_id: 2 },
+    { content: "Great job, keep up the good work!", user_id: 3, post_id: 3 },
+    {
+      content: "I found a typo in the second paragraph.",
+      user_id: 3,
+      post_id: 4,
+    },
   ]);
 };

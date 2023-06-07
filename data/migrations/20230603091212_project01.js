@@ -34,14 +34,14 @@ exports.up = function (knex) {
 
     .createTable("roles", (roles) => {
       roles.increments("role_id");
-      roles.string("rolename").notNullable().defaultTo("user");
+      roles.string("rolename").notNullable().defaultTo("User");
       roles
         .integer("user_id")
         .notNullable()
-        .references("user_id") //ilişki kurulacak kolon adı
-        .inTable("users") //ilişki kurulacak tablo adı.
+        .references("user_id")
+        .inTable("users")
         .onDelete("RESTRICT")
-        .onUpdate("RESTRICT"); //RESTRICT yasaklar silinmesini
+        .onUpdate("RESTRICT");
     })
 
     .createTable("favorites", (favorites) => {
@@ -67,8 +67,7 @@ exports.up = function (knex) {
 
     .createTable("comments", (comments) => {
       comments.increments("comment_id");
-
-      comments.timestamp("create_at").defaultTo(knex.fn.now());
+      comments.timestamp("created_at").defaultTo(knex.fn.now());
       comments.string("body").notNullable();
       comments.string("image_url");
       comments
@@ -81,10 +80,10 @@ exports.up = function (knex) {
       comments
         .integer("user_id")
         .notNullable()
-        .references("user_id") //ilişki kurulacak kolon adı
-        .inTable("users") //ilişki kurulacak tablo adı.
+        .references("user_id")
+        .inTable("users")
         .onDelete("CASCADE")
-        .onUpdate("CASCADE"); //RESTRICT yasaklar silinmesini
+        .onUpdate("CASCADE");
     });
 };
 
@@ -96,6 +95,7 @@ exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists("comments")
     .dropTableIfExists("favorites")
+    .dropTableIfExists("roles")
     .dropTableIfExists("posts")
     .dropTableIfExists("users");
 };
