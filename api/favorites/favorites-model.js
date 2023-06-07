@@ -20,4 +20,8 @@ async function getByPostId(id) {
   return favoritedByUsers;
 }
 
-module.exports = { getById, getByPostId };
+function create(user_id, post_id) {
+  return db("favorites as f").insert(user_id, post_id);
+}
+
+module.exports = { getById, getByPostId, create };
