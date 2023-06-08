@@ -1,4 +1,6 @@
 const favsModel = require("../favorites/favorites-model");
+const usersModel = require("../users/users-model");
+const postsModel = require("../posts/posts-model");
 
 const checkFavsByUserId = async (req, res, next) => {
   try {
@@ -66,9 +68,39 @@ const isPostInFavorites = async (req, res, next) => {
   }
 };
 
+const checkIds = async (req, res, next) => {
+  try {
+    const userId = req.params.user_id;
+    const postId = req.params.post_id;
+
+    if (!userId || !postId) {
+      res
+        .status(400)
+        .json({ message: `Can not add to favorite post id: ${postId}.` });
+    } else {
+      const isUserExist = await usersModel.getById(userId);
+      const isPostExist = await postsModel.getById(postId);
+      if (!isUserExist) {
+        res
+          .status(400)
+          .json({ message: `Can not found user with id: ${userId}.` });
+      } else if (!isPostExist) {
+        res
+          .status(400)
+          .json({ message: `Can not found post with id: ${postId}.` });
+      } else {
+        next();
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   checkFavsByUserId,
   checkFavsByPostId,
   isFavoritedBefore,
   isPostInFavorites,
+  checkIds,
 };

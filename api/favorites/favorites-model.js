@@ -1,5 +1,11 @@
 const db = require("../../data/db-config");
 
+//brings favorited post with favorite_id
+async function getByFavId(id) {
+  const favedPost = await db("favorites").where("favorite_id", id).first();
+  return favedPost;
+}
+
 //gets users liked posts (returns array with post objects)
 async function getById(id) {
   const favPosts = await db("favorites as f")
@@ -20,8 +26,12 @@ async function getByPostId(id) {
   return favoritedByUsers;
 }
 
-function create(user_id, post_id) {
-  return db("favorites as f").insert({ user_id: user_id, post_id: post_id });
+async function create(user_id, post_id) {
+  const [favorited] = await db("favorites as f").insert({
+    user_id: user_id,
+    post_id: post_id,
+  });
+  return getByFavId(favorited);
 }
 
 function remove(user_id, post_id) {
@@ -30,4 +40,4 @@ function remove(user_id, post_id) {
     .del();
 }
 
-module.exports = { getById, getByPostId, create, remove };
+module.exports = { getByFavId, getById, getByPostId, create, remove };

@@ -7,13 +7,16 @@ const favsMw = require("../favorites/favorites-middleware");
 router.post(
   "/:user_id/:post_id",
   favsMw.isFavoritedBefore,
+  favsMw.checkIds,
   async (req, res, next) => {
     try {
       const userId = req.params.user_id;
       const postId = req.params.post_id;
       if (userId && postId) {
-        await favModel.create(userId, postId);
-        res.status(200).json({ message: "Post added to favorites." });
+        const favoritedPost = await favModel.create(userId, postId);
+        res
+          .status(200)
+          .json({ message: "Post added to favorites.", favoritedPost });
       } else {
         res.status(400).json({ message: "Cannot add to favorites." });
       }
@@ -32,9 +35,13 @@ router.delete(
       const postId = req.params.post_id;
       if (userId && postId) {
         await favModel.remove(userId, postId);
-        res.status(200).json({ message: "Post removed from favorites." });
+        res
+          .status(200)
+          .json({ message: `Post with id: ${postId} removed from favorites.` });
       } else {
-        res.status(400).json({ message: "Cannot remove from favorites." });
+        res.status(400).json({
+          message: `Cannot remove the post with id: ${postId} from favorites.`,
+        });
       }
     } catch (error) {
       next(error);

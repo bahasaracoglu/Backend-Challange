@@ -40,8 +40,8 @@ exports.up = function (knex) {
         .notNullable()
         .references("user_id")
         .inTable("users")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     })
 
     .createTable("favorites", (favorites) => {
@@ -75,8 +75,8 @@ exports.up = function (knex) {
         .notNullable()
         .references("post_id")
         .inTable("posts")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
       comments
         .integer("user_id")
         .notNullable()

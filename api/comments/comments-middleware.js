@@ -1,4 +1,6 @@
 const commentsModel = require("./comments-model");
+const usersModel = require("../users/users-model");
+const postsModel = require("../posts/posts-model");
 
 const checkCommentsByUserId = async (req, res, next) => {
   try {
@@ -42,9 +44,21 @@ const checkPayload = async (req, res, next) => {
     if (!userId || !postId || !body || body.trim().length > 280) {
       res
         .status(400)
-        .json({ message: `Can not create comment for post id: ${id}.` });
+        .json({ message: `Can not create comment for post id: ${postId}.` });
     } else {
-      next();
+      const isUserExist = await usersModel.getById(userId);
+      const isPostExist = await postsModel.getById(postId);
+      if (!isUserExist) {
+        res
+          .status(400)
+          .json({ message: `Can not found user with id: ${userId}.` });
+      } else if (!isPostExist) {
+        res
+          .status(400)
+          .json({ message: `Can not found post with id: ${postId}.` });
+      } else {
+        next();
+      }
     }
   } catch (error) {
     next(error);
