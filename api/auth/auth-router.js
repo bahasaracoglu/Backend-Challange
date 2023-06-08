@@ -58,7 +58,7 @@ router.post(
 router.get("/logout", restricted, (req, res, next) => {
   try {
     tokenHelper.logout(req.headers.authorization);
-    res.json({ message: "Çıkış işlemi başarılı" });
+    res.json({ message: "User succesfully logged out." });
   } catch (error) {
     next(error);
   }
