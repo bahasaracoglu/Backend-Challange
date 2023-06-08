@@ -33,7 +33,7 @@ const isUserAllowed = async (req, res, next) => {
       next();
     } else {
       res.status(400).json({
-        message: `Creating post is not allowed for user id:${payload.user_id}.`,
+        message: `User with id:${payload.user_id} is not allowed.`,
       });
     }
   } catch (error) {
@@ -49,7 +49,7 @@ const isUserOwnThisPost = async (req, res, next) => {
     const isAllowed = usersPosts.filter((post) => post.post_id == post_id);
     if (isAllowed.length === 0) {
       res.status(400).json({
-        message: `Creating post is not allowed for user id:${user_id}.`,
+        message: `No permission for this operation with user id:${user_id}.`,
       });
     } else {
       next();

@@ -90,19 +90,24 @@ router.put(
 
 //deletes post
 
-router.delete("/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    const deletedPost = await postsModel.remove(id);
-    if (!deletedPost) {
-      res.status(400).json({ message: `Post with id: ${id} is not found.` });
-    } else {
-      res.status(200).json({ message: "Post removed successfully." });
+router.delete(
+  "/:user_id/:post_id",
+  restricted,
+  postsMw.isUserOwnThisPost,
+  async (req, res, next) => {
+    try {
+      const id = req.params.post_id;
+      const deletedPost = await postsModel.remove(id);
+      if (!deletedPost) {
+        res.status(400).json({ message: `Post with id: ${id} is not found.` });
+      } else {
+        res.status(200).json({ message: "Post removed successfully." });
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 router.get(
   "/:id/favorites",
