@@ -2,6 +2,7 @@ const router = require("express").Router();
 const postsModel = require("./posts-model");
 const postsMw = require("./posts-middleware");
 const favsMw = require("../favorites/favorites-middleware");
+const usersMw = require("../users/users-middleware");
 const commentsMw = require("../comments/comments-middleware");
 const { restricted } = require("../middleware/restricted");
 
@@ -16,7 +17,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // brings all posts of user with id
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", usersMw.isUserExist, async (req, res, next) => {
   try {
     const user_id = req.params.id;
     const posts = await postsModel.getBy({ user_id: user_id });
