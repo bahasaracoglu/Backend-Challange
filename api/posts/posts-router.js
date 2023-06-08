@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const postsModel = require("./posts-model");
-const mw = require("./posts-middleware");
+const postsMw = require("./posts-middleware");
 const favsMw = require("../favorites/favorites-middleware");
 const commentsMw = require("../comments/comments-middleware");
+const { restricted } = require("../middleware/restricted");
 
 // brings all posts for feed
 router.get("/", async (req, res, next) => {
@@ -14,8 +15,19 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// brings all posts of user with id
+router.get("/:id", async (req, res, next) => {
+  try {
+    const user_id = req.params.id;
+    const posts = await postsModel.getBy({ user_id: user_id });
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
 //creates new post
-router.post("/", mw.checkPayload, async (req, res, next) => {
+router.post("/", postsMw.checkPayload, async (req, res, next) => {
   try {
     const { body, image_url, user_id } = req.body;
     const newPost = { user_id: user_id, body: body, image_url: image_url };
@@ -34,7 +46,7 @@ router.post("/", mw.checkPayload, async (req, res, next) => {
 
 //updates post
 
-router.put("/:id", mw.checkPayload, async (req, res, next) => {
+router.put("/:id", postsMw.checkPayload, async (req, res, next) => {
   try {
     const id = req.params.id;
     const { body, image_url, user_id } = req.body;

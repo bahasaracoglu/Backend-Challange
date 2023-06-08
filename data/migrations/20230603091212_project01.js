@@ -84,6 +84,10 @@ exports.up = function (knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
+    })
+    .createTable("tokenBlackList", (t) => {
+      t.increments(), t.string("token").notNullable();
+      t.timestamp("createdate").defaultTo(knex.fn.now());
     });
 };
 
@@ -93,6 +97,7 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
   return knex.schema
+    .dropTableIfExists("tokenBlackList")
     .dropTableIfExists("comments")
     .dropTableIfExists("favorites")
     .dropTableIfExists("roles")

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET || "shh";
 const jwt = require("jsonwebtoken");
-const db = require("../data/dbConfig");
+const db = require("../data/db-config");
 
 function generateToken(payload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });

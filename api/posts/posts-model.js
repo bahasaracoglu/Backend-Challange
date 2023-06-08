@@ -4,6 +4,11 @@ function getAll() {
   return db("posts");
 }
 
+async function getBy(filter) {
+  const posts = await db("posts").where(filter);
+  return posts;
+}
+
 async function getById(id) {
   const post = await db("posts").where("post_id", id).first();
   return post;
@@ -28,6 +33,7 @@ async function update(id, post) {
 
 module.exports = {
   getAll,
+  getBy,
   getById,
   create,
   remove,
