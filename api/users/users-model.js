@@ -7,7 +7,10 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const user = await db("users").where("user_id", id).first();
+  const user = await db("users as u")
+    .where("user_id", id)
+    .select("u.user_id", "u.username", "u.email", "u.avatar_url")
+    .first();
   return user;
 }
 
@@ -26,7 +29,8 @@ async function getBy(filter) {
 }
 
 async function create(user) {
-  const [insertedUser] = await db("users").insert(user);
+  const [insertedUser] = await db("users as u").insert(user);
+
   return getById(insertedUser);
 }
 
