@@ -28,46 +28,65 @@ router.get("/:id", restricted, usersMw.isUserExist, async (req, res, next) => {
 });
 
 //creates new post
-router.post("/", postsMw.checkPayload, async (req, res, next) => {
-  try {
-    const { body, image_url, user_id } = req.body;
-    const newPost = { user_id: user_id, body: body, image_url: image_url };
-    const insertedPost = await postsModel.create(newPost);
-    if (!insertedPost) {
+router.post(
+  "/:user_id",
+  restricted,
+  postsMw.isUserAllowed,
+  postsMw.checkPayload,
+  async (req, res, next) => {
+    try {
+      const { body, image_url } = req.body;
+      const newPost = {
+        user_id: req.params.user_id,
+        body: body,
+        image_url: image_url,
+      };
+      const insertedPost = await postsModel.create(newPost);
+      if (!insertedPost) {
+        next(error);
+      } else {
+        res
+          .status(200)
+          .json({ message: "New post successfully submitted.", insertedPost });
+      }
+    } catch (error) {
       next(error);
-    } else {
-      res
-        .status(200)
-        .json({ message: "New post successfully submitted.", insertedPost });
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 //updates post
 
-router.put("/:id", postsMw.checkPayload, async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    const { body, image_url, user_id } = req.body;
-    const newPost = {
-      user_id: user_id,
-      body: body,
-      image_url: image_url,
-    };
-    const updatedPost = await postsModel.update(id, newPost);
-    if (!updatedPost) {
+router.put(
+  "/:user_id/:post_id",
+  restricted,
+  postsMw.isUserAllowed,
+  postsMw.isUserOwnThisPost,
+  postsMw.checkPayload,
+  async (req, res, next) => {
+    try {
+      const post_id = req.params.post_id;
+      const user_id = req.params.user_id;
+      const { body, image_url } = req.body;
+      const newPost = {
+        user_id: user_id,
+        body: body,
+        image_url: image_url,
+      };
+      const updatedPost = await postsModel.update(post_id, newPost);
+      if (!updatedPost) {
+        res.status(200).json({ message: "Post cannot updated.", updatedPost });
+      } else {
+        res.status(200).json({
+          message: "Edited post successfully submitted.",
+          updatedPost,
+        });
+      }
+    } catch (error) {
       next(error);
-    } else {
-      res
-        .status(200)
-        .json({ message: "Edited post successfully submitted.", updatedPost });
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 //deletes post
 
@@ -87,6 +106,7 @@ router.delete("/:id", async (req, res, next) => {
 
 router.get(
   "/:id/favorites",
+  restricted,
   favsMw.checkFavsByPostId,
   async (req, res, next) => {
     try {
@@ -99,6 +119,7 @@ router.get(
 
 router.get(
   "/:id/comments",
+  restricted,
   commentsMw.checkCommentsByPostId,
   async (req, res, next) => {
     try {

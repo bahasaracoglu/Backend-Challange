@@ -97,10 +97,26 @@ const checkIds = async (req, res, next) => {
   }
 };
 
+const isUserAllowed = async (req, res, next) => {
+  try {
+    const payload = tokenHelper.decodeTokensPayload(
+      req.headers["authorization"]
+    );
+    const userId = req.params.user_id;
+
+    if (payload.user_id == userId) {
+      next();
+    } else {
+      res.status(400).json({ message: "Comment is not allowed." });
+    }
+  } catch (error) {}
+};
+
 module.exports = {
   checkFavsByUserId,
   checkFavsByPostId,
   isFavoritedBefore,
   isPostInFavorites,
   checkIds,
+  isUserAllowed,
 };

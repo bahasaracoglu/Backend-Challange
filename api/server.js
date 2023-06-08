@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const server = express();
 const morgan = require("morgan");
+const restrict = require("./middleware/restricted");
 
 const postsRouter = require("../api/posts/posts-router");
 const authRouter = require("../api/auth/auth-router");
@@ -18,8 +19,8 @@ server.use(morgan("dev"));
 server.use("/api/users", usersRouter);
 server.use("/api/posts", postsRouter);
 server.use("/api/auth", authRouter);
-server.use("/api/favorites", favRouter);
-server.use("/api/comments", commentsRouter);
+server.use("/api/favorites", restrict, favRouter);
+server.use("/api/comments", restrict, commentsRouter);
 
 server.use((err, req, res, next) => {
   // eslint-disable-line

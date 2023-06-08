@@ -6,6 +6,7 @@ const favsMw = require("../favorites/favorites-middleware");
 // adds post to favorites
 router.post(
   "/:user_id/:post_id",
+  favsMw.isUserAllowed,
   favsMw.isFavoritedBefore,
   favsMw.checkIds,
   async (req, res, next) => {
@@ -28,7 +29,9 @@ router.post(
 
 router.delete(
   "/:user_id/:post_id",
+  favsMw.isUserAllowed,
   favsMw.isPostInFavorites,
+
   async (req, res, next) => {
     try {
       const userId = req.params.user_id;

@@ -1,12 +1,11 @@
 const router = require("express").Router();
 const commentsModel = require("./comments-model");
 const commentsMw = require("./comments-middleware");
-const tokenHelper = require("../../helper/token-helper");
 
 router.post(
   "/:user_id/:post_id",
-  commentsMw.checkPayload,
   commentsMw.isUserAllowed,
+  commentsMw.checkPayload,
   async (req, res, next) => {
     try {
       const userId = req.params.user_id;
@@ -31,6 +30,7 @@ router.post(
 
 router.put(
   "/:user_id/:post_id",
+  commentsMw.isUserAllowed,
   commentsMw.checkPayload,
   async (req, res, next) => {
     try {

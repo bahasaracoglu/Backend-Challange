@@ -3,6 +3,7 @@ const usersModel = require("./users-model");
 const favsMw = require("../favorites/favorites-middleware");
 const commentsMw = require("../comments/comments-middleware");
 const router = require("express").Router();
+const restricted = require("../middleware/restricted");
 
 // brings all users
 router.get("/", async (req, res, next) => {
@@ -49,6 +50,7 @@ router.delete("/:id", async (req, res, next) => {
 // brings users favorited posts
 router.get(
   "/:id/favorites",
+  restricted,
   favsMw.checkFavsByUserId,
   async (req, res, next) => {
     try {
@@ -61,6 +63,7 @@ router.get(
 
 router.get(
   "/:id/comments",
+  restricted,
   commentsMw.checkCommentsByUserId,
   async (req, res, next) => {
     try {
