@@ -39,19 +39,26 @@ router.get(
 );
 
 // deletes user
-router.delete("/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    const deletedUser = await usersModel.remove(id);
-    if (!deletedUser) {
-      res.status(400).json({ message: `User with id: ${id} is not found.` });
-    } else {
-      res.status(200).json({ message: "User removed successfully." });
+router.delete(
+  "/:id",
+  usersMw.isUserExist,
+  usersMw.isOwnProfile,
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const deletedUser = await usersModel.remove(id);
+      if (!deletedUser) {
+        res.status(400).json({ message: `User with id: ${id} is not found.` });
+      } else {
+        res
+          .status(200)
+          .json({ message: `User with id: ${id} removed successfully.` });
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 // brings users favorited posts
 router.get(
