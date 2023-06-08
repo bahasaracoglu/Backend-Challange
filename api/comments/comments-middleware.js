@@ -1,6 +1,7 @@
 const commentsModel = require("./comments-model");
 const usersModel = require("../users/users-model");
 const postsModel = require("../posts/posts-model");
+const tokenHelper = require("../../helper/token-helper");
 
 const checkCommentsByUserId = async (req, res, next) => {
   try {
@@ -65,4 +66,24 @@ const checkPayload = async (req, res, next) => {
   }
 };
 
-module.exports = { checkCommentsByUserId, checkCommentsByPostId, checkPayload };
+const isUserAllowed = async (req, res, next) => {
+  try {
+    const payload = tokenHelper.decodeTokensPayload(
+      req.headers["authorization"]
+    );
+    const userId = req.params.user_id;
+
+    if (payload.user_id == userId) {
+      next();
+    } else {
+      res.status(400).json({ message: "Comment is not allowed." });
+    }
+  } catch (error) {}
+};
+
+module.exports = {
+  checkCommentsByUserId,
+  checkCommentsByPostId,
+  checkPayload,
+  isUserAllowed,
+};

@@ -1,15 +1,21 @@
 require("dotenv").config();
-const JWT_SECRET = process.env.JWT_SECRET || "shh";
+const { JWT_SECRET } = require("../api/secret/index");
 const jwt = require("jsonwebtoken");
 const db = require("../data/db-config");
 
 function generateToken(payload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
 }
+
+function decodeTokensPayload(token) {
+  const decodedToken = jwt.verify(token, JWT_SECRET);
+  return decodedToken;
+}
+
 async function logout(token) {
   await db("tokenBlackList").insert({ token: token });
 }
-function deleteTokenFromBlackList(token) {
+function deleteFromBlackListToken(token) {
   return db("tokenBlackList").where("token", token).del();
 }
 function checkIsInsertBlackList(token) {
@@ -18,8 +24,8 @@ function checkIsInsertBlackList(token) {
 
 module.exports = {
   generateToken,
-  JWT_SECRET: JWT_SECRET,
+  decodeTokensPayload,
   logout,
-  deleteTokenFromBlackList,
+  deleteFromBlackListToken,
   checkIsInsertBlackList,
 };

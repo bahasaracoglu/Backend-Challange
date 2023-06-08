@@ -1,4 +1,5 @@
 const tokenHelper = require("../../helper/token-helper");
+const { JWT_SECRET } = require("../secret");
 const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
@@ -18,18 +19,16 @@ module.exports = async (req, res, next) => {
     if (!token) {
       res.status(401).json({ message: "Token gereklidir" });
     } else {
-      jwt.verify(token, tokenHelper.JWT_SECRET, async (err, decodedToken) => {
+      jwt.verify(token, JWT_SECRET, async (err, decodedToken) => {
         if (err) {
           await tokenHelper.deleteFromBlackListToken(token);
           res.status(401).json({ message: "Token geçersiz" });
         } else {
           let isLogoutBefore = await tokenHelper.checkIsInsertBlackList(token);
           if (isLogoutBefore) {
-            res
-              .status(400)
-              .json({
-                message: "Daha önce çıkış yapılmış. Tekrar giriş yapınız",
-              });
+            res.status(400).json({
+              message: "Daha önce çıkış yapılmış. Tekrar giriş yapınız",
+            });
           } else {
             req.decodedToken = decodedToken;
             next();

@@ -8,6 +8,8 @@ const {
   isUserExist,
   passwordCheck,
 } = require("./auth-middleware");
+const restricted = require("../middleware/restricted");
+const tokenHelper = require("../../helper/token-helper");
 
 router.post(
   "/register",
@@ -53,6 +55,13 @@ router.post(
   }
 );
 
-router.post("/logout", (req, res, next) => {});
+router.get("/logout", restricted, (req, res, next) => {
+  try {
+    tokenHelper.logout(req.headers.authorization);
+    res.json({ message: "Çıkış işlemi başarılı" });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

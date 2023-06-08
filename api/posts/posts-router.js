@@ -4,7 +4,7 @@ const postsMw = require("./posts-middleware");
 const favsMw = require("../favorites/favorites-middleware");
 const usersMw = require("../users/users-middleware");
 const commentsMw = require("../comments/comments-middleware");
-const { restricted } = require("../middleware/restricted");
+const restricted = require("../middleware/restricted");
 
 // brings all posts for feed
 router.get("/", async (req, res, next) => {
@@ -17,7 +17,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // brings all posts of user with id
-router.get("/:id", usersMw.isUserExist, async (req, res, next) => {
+router.get("/:id", restricted, usersMw.isUserExist, async (req, res, next) => {
   try {
     const user_id = req.params.id;
     const posts = await postsModel.getBy({ user_id: user_id });
