@@ -1,12 +1,9 @@
 const db = require("../../data/db-config");
 
 async function getAll() {
-  return db("users as u").select(
-    "u.user_id",
-    "u.username",
-    "u.email",
-    "u.avatar_url"
-  );
+  return await db("users as u")
+    .join("roles as r", "u.user_id", "r.user_id")
+    .select("u.*", "r.rolename");
 }
 
 async function getById(id) {
@@ -20,7 +17,11 @@ async function getByUsernameOrEmail(username, email) {
 }
 
 async function getBy(filter) {
-  const user = await db("users").where(filter).first();
+  const user = await db("users as u")
+    .join("roles as r", "u.user_id", "r.user_id")
+    .select("u.*", "r.rolename")
+    .where(filter)
+    .first();
   return user;
 }
 

@@ -127,6 +127,7 @@ async function passwordCheck(req, res, next) {
       let payload = {
         user_id: req.currentUser.user_id,
         username: req.currentUser.username,
+        rolename: req.currentUser.rolename,
         avatar_url: req.currentUser.avatar_url,
       };
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });

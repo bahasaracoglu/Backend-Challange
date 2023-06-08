@@ -16,7 +16,7 @@ server.use(express.json());
 server.use(cors());
 server.use(morgan("dev"));
 
-server.use("/api/users", usersRouter);
+server.use("/api/users", restrict, usersRouter);
 server.use("/api/posts", postsRouter);
 server.use("/api/auth", authRouter);
 server.use("/api/favorites", restrict, favRouter);
