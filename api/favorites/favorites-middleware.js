@@ -1,6 +1,7 @@
 const favsModel = require("../favorites/favorites-model");
 const usersModel = require("../users/users-model");
 const postsModel = require("../posts/posts-model");
+const tokenHelper = require("../../helper/token-helper");
 
 const checkFavsByUserId = async (req, res, next) => {
   try {
@@ -107,7 +108,9 @@ const isUserAllowed = async (req, res, next) => {
     if (payload.user_id == userId) {
       next();
     } else {
-      res.status(400).json({ message: "Comment is not allowed." });
+      res.status(400).json({
+        message: `User with id:${payload.user_id} doesnt have permission.`,
+      });
     }
   } catch (error) {}
 };

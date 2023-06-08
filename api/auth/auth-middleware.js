@@ -1,7 +1,7 @@
 const usersModel = require("../users/users-model");
 const validator = require("validator");
 const bcryptjs = require("bcryptjs");
-const { JWT_SECRET } = require("../secret");
+const { JWT_SECRET } = require("../../config/config");
 const jwt = require("jsonwebtoken");
 
 function checkPayload(req, res, next) {

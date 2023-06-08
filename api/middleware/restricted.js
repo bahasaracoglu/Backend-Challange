@@ -1,5 +1,5 @@
 const tokenHelper = require("../../helper/token-helper");
-const { JWT_SECRET } = require("../secret");
+const { JWT_SECRET } = require("../../config/config");
 const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
