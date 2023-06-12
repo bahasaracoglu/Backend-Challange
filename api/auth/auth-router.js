@@ -29,6 +29,7 @@ router.post(
 
     try {
       const insertedUser = await usersModel.create(newUser);
+
       res
         .status(200)
         .json({ message: "User successfully created.", insertedUser });

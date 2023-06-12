@@ -78,7 +78,9 @@ const isUserAllowed = async (req, res, next) => {
     } else {
       res.status(400).json({ message: "Comment is not allowed." });
     }
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {

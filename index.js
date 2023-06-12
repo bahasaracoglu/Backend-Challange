@@ -1,6 +1,7 @@
 /*const redis = require("redis");
 const client = redis.createClient();*/
 const server = require("./api/server");
+const { PORT } = require("./config/config");
 /*
 // Redis bağlantısı başarıyla kurulduğunda
 client.on("connect", function () {
@@ -27,8 +28,6 @@ client.set("testKey", "testValue", function (err, reply) {
     });
   }
 });*/
-
-const PORT = process.env.PORT || "9000";
 
 server.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);
